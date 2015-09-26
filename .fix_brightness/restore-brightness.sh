@@ -1,20 +1,24 @@
 #!/bin/bash
+cd "$(dirname "$0")"
 
-# Get data from file:
-video0=`sed -n '1p' /home/przemyslaw/.fix_brightness/saved_brightness`
-video1=`sed -n '2p' /home/przemyslaw/.fix_brightness/saved_brightness`
-intel=`sed -n '3p' /home/przemyslaw/.fix_brightness/saved_brightness`
+# Update all values:
+path=`find /sys/class/backlight/*`
 
-# Apply changes to acpi_video0:
-echo $video0 > /sys/class/backlight/acpi_video0/brightness
-echo $video0 > /sys/class/backlight/acpi_video0/actual_brightness
+# Add devices to array:
+devices=()
 
-# Apply changes to acpi_video1:
-echo $video1 > /sys/class/backlight/acpi_video1/brightness
-echo $video1 > /sys/class/backlight/acpi_video1/actual_brightness
+for file in $path; do
+    devices+=("$file")
+done
 
-# Apply changes to intel_backlight:
-echo $intel > /sys/class/backlight/intel_backlight/brightness
-echo $intel > /sys/class/backlight/intel_backlight/actual_brightness
+# For each device get stored value and save it to proper file:
+for i in "${!devices[@]}"; do
+    # Get stored value for the current device:
+    value=`sed -n $(($i+1))'p' saved_brightness`
+
+    # Save stored value to the system files:
+    echo $value > "${devices[$i]}/brightness"
+    echo $value > "${devices[$i]}/actual_brightness"
+done
 
 exit 0

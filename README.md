@@ -1,47 +1,34 @@
-ubuntu-fix-brightness
+ubuntu-brightness-fix
 =====================
-My solution for problems with reseting brightness
+My solution for problem with reseting brightness
 on ubuntu boot-up and wake-up from suspension.
 
-After installation on each brightness change, new value is saved and
+After configuration, on each brightness change new value is saved and
 restored on every wake-up from sleep and system boot-up.
 
 ## Configuration:
-In all commands presented in readme and in each script change USERNAME to you username.
+In all commands change USERNAME to you system username.
 
-1. Install inotifywait
+1. Install inotify-tools:
     ```bash
     $ sudo apt-get install inotify-tools
     ```
 
-2. Check you devices:
-    Comand will display folders and you will need to change the script referng to above log.
-    ```bash
-    $ ls /sys/class/backlight
-    ```
-
-    Example output:
-    ```bash
-    $ ls /sys/class/backlight
-    acpi_video0  acpi_video1  intel_backlight  nv_backlight
-    ```
-    I've skipped nv_backlight in scripts because value here is not changing.
-
-4. Add to /usr/lib/pm-utils/sleep.d/95led in the 'resume' section
+2. Add to /usr/lib/pm-utils/sleep.d/95led in the 'resume' section
     ```bash
     # Fix brightness:
-    exec /home/USERNAME/.fix_brightness/./restore-brightness.sh
+    nohup /home/USERNAME/.fix_brightness/restore-brightness.sh &>/dev/null &
     ```
     This will restore brightness on system startup.
 
-5. Add to /etc/rc.local	line before exit 0
+3. Add to /etc/rc.local	line before exit 0
     ```bash
-    exec /home/USERNAME/.fix_brightness/./restore-brightness.sh
+    # Fix brightness:
+    nohup /home/USERNAME/.fix_brightness/restore-brightness.sh &>/dev/null &
     ```
     This will restore brightness on wake-up from suspension.
 
-6. Add task to cron:
-    Type in terminal:
+4. Add task to cron:
     ```bash
     $ crontab -e
     ```
@@ -50,3 +37,5 @@ In all commands presented in readme and in each script change USERNAME to you us
     ```bash
     @reboot nohup /home/USERNAME/.fix_brightness/save-brightness.sh &>/dev/null &
     ```
+
+5. Now reboot your system and enjoy!
