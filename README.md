@@ -4,13 +4,15 @@ My solution to the problem of resetting the brightness of the screen
 at startup and wake from suspension on ubuntu.
 
 After setup, each time you change the brightness value is stored in the file
-'saved_brightness'. During the system startup and wake from sleep value
-is restored using the script 'restore_brightness.sh'. Script 'save_brightness.sh' runs in the background monitoring and recording the changes in the brightness of the screen.
+'saved\_brightness'. During the system startup and wake from sleep value
+is restored using the script 'restore\_brightness.sh'. Script 'save_brightness.sh' runs in the background monitoring and recording the changes in the brightness of the screen.
 
 ## Configuration:
+
 In all commands below change USERNAME to you system username.
 
 ### 1. Install inotify-tools:
+
     ```bash
     $ sudo apt-get install inotify-tools
     ```
